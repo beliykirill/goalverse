@@ -1,0 +1,1 @@
+export { TeamSquad } from './ui';

@@ -6,8 +6,8 @@ i18n.use(initReactI18next).init({
   resources,
   fallbackLng: 'ru',
   compatibilityJSON: 'v3',
-  defaultNS: 'home',
-  ns: ['home'],
+  defaultNS: 'teams',
+  ns: ['teams'],
   react: {
     useSuspense: false,
   },

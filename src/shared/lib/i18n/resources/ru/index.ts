@@ -1,5 +1,5 @@
-import home from './home.json';
+import teams from './teams.json';
 
 export const ruI18nResources = {
-  home,
+  teams,
 };

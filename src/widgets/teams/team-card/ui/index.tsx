@@ -2,12 +2,12 @@ import { Linking } from 'react-native';
 import { TFunction } from 'i18next';
 import styled from 'styled-components/native';
 import { color } from '@shared/lib/themes';
-import { ITeamFilters } from '@shared/types/teams';
+import { ITeamInformation } from '@shared/types/teams';
 import { HeadlineText, SecondaryText, SmallText } from '@shared/ui';
 
 interface TeamCardProps {
   t: TFunction;
-  team: ITeamFilters;
+  team: ITeamInformation;
   onPress(id: number): void;
 }
 
@@ -37,25 +37,25 @@ export const TeamCard = ({ t, team, onPress }: TeamCardProps) => {
 
       <InformationContainer>
         <InformationBlock>
-          <SecondaryText>{t('card.venue')}</SecondaryText>
+          <SecondaryText>{t('venue')}</SecondaryText>
           <ValueText>{venue}</ValueText>
         </InformationBlock>
         <InformationBlock>
-          <SecondaryText>{t('card.address')}</SecondaryText>
+          <SecondaryText>{t('address')}</SecondaryText>
           <ValueText numberOfLines={1} ellipsizeMode="tail">
             {address}
           </ValueText>
         </InformationBlock>
         <InformationBlock>
-          <SecondaryText>{t('card.club_colors')}</SecondaryText>
+          <SecondaryText>{t('club_colors')}</SecondaryText>
           <ValueText>{clubColors}</ValueText>
         </InformationBlock>
         <InformationBlock>
-          <SecondaryText>{t('card.founded')}</SecondaryText>
+          <SecondaryText>{t('founded')}</SecondaryText>
           <ValueText>{founded}</ValueText>
         </InformationBlock>
         <InformationBlock>
-          <SecondaryText>{t('card.website')}</SecondaryText>
+          <SecondaryText>{t('website')}</SecondaryText>
           <LinkText onPress={() => Linking.openURL(team.website)}>
             {website.replace(/^https?:\/\//, '')}
           </LinkText>

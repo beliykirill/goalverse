@@ -1,0 +1,22 @@
+{
+  "loading": "Загрузка...",
+  "go_back": "← Вернуться",
+
+  "venue": "\uD83C\uDFDF Стадион:",
+  "address": "\uD83D\uDCCD Адрес:",
+  "club_colors": "\uD83C\uDFA8 Расцветка клуба:",
+  "founded": "\uD83D\uDDD3 Основан в:",
+  "website": "\uD83C\uDF10 Сайт:",
+
+  "competitions_title": "Состязания",
+
+  "coach_title": "Тренер",
+  "name": "\uD83D\uDC64 Имя:",
+  "nationality": "\uD83C\uDDF3\uD83C\uDDFF Национальность:",
+  "date_of_birth": "\uD83D\uDCC5 Дата рождения:",
+
+  "squad_title": "Команда",
+  "shirt_number": "#{{ count }}",
+  "market_value": "${{ count }}",
+  "market_value_none": "-"
+}

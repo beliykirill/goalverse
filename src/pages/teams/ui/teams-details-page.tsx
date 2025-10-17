@@ -1,19 +1,27 @@
-import { ScrollView, Linking } from 'react-native';
-import styled from 'styled-components/native';
-import { HeadlineText, MainText, SecondaryText, SmallText } from '@shared/ui';
-import { color } from '@shared/lib/themes';
-import { ITeam } from '@shared/types/teams.ts';
 import { useEffect } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@shared/types/store';
+import { ScrollView } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import styled from 'styled-components/native';
+import { color } from '@shared/lib/themes';
+import { ITeam } from '@shared/types/teams';
+import { AppDispatch, RootState } from '@shared/types/store';
 import { Nullable } from '@shared/types/global';
+import { HeadlineText } from '@shared/ui';
 import { loadTeam } from '@entities/teams';
+import { TeamCoach } from '@widgets/teams/team-coach';
+import { TeamSquad } from '@widgets/teams/team-squad';
+import { TeamCompetitions } from '@widgets/teams/team-competitions';
+import { TeamDetails } from '@widgets/teams/team-details';
+import { TeamHeader } from '@widgets/teams/team-header';
 
 export const TeamsDetailsPage = () => {
-  const dispatch = useDispatch();
+  const [t] = useTranslation();
+  const dispatch = useDispatch<AppDispatch>();
 
+  const { goBack } = useNavigation();
   const { params } = useRoute();
 
   const team = useSelector<RootState, Nullable<ITeam>>(
@@ -23,223 +31,57 @@ export const TeamsDetailsPage = () => {
   useEffect(() => {
     if (team) return;
 
-    const onLoadTeam = async () => {
-      if (!team) {
-        dispatch(loadTeam(params.id as number));
-
-        return;
-      }
-    };
-
-    onLoadTeam();
+    dispatch(loadTeam(params.id));
   }, [team]);
 
-  if (!team) return null;
+  console.log(params.id);
+
+  if (!team)
+    return (
+      <LoaderWrapper>
+        <HeadlineText>{t('loading')}</HeadlineText>
+      </LoaderWrapper>
+    );
+
+  const { name, shortName, crest, coach, squad, runningCompetitions } = team;
 
   return (
-    <ScrollView>
-      <Header>
-        <Logo source={{ uri: team.crest }} resizeMode="contain" />
-        <TitleBlock>
-          <HeadlineText>{team.name}</HeadlineText>
-          <SecondaryText>{team.shortName}</SecondaryText>
-        </TitleBlock>
-      </Header>
+    <Container>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TeamHeader
+          t={t}
+          name={name}
+          shortName={shortName}
+          crest={crest}
+          onBack={goBack}
+        />
 
-      <Container>
-        {/* Team Info */}
-        <Card>
-          <InfoRow>
-            <LabelText>🏟 Venue</LabelText>
-            <SingleLineText>{team.venue}</SingleLineText>
-          </InfoRow>
-          <InfoRow>
-            <LabelText>📍 Address</LabelText>
-            <SingleLineText>{team.address}</SingleLineText>
-          </InfoRow>
-          <InfoRow>
-            <LabelText>🎨 Club Colors</LabelText>
-            <SingleLineText>{team.clubColors}</SingleLineText>
-          </InfoRow>
-          <InfoRow>
-            <LabelText>🗓 Founded</LabelText>
-            <SingleLineText>{team.founded}</SingleLineText>
-          </InfoRow>
-          <InfoRow>
-            <LabelText>🌐 Website</LabelText>
-            <LinkText onPress={() => Linking.openURL(team.website)}>
-              {team.website.replace(/^https?:\/\//, '')}
-            </LinkText>
-          </InfoRow>
-        </Card>
+        <TeamDetails t={t} team={team} />
 
-        {/* Coach Info */}
-        <SectionTitle>Coach</SectionTitle>
-        <Card>
-          <InfoRow>
-            <LabelText>👤 Name</LabelText>
-            <SingleLineText>{team.coach.name}</SingleLineText>
-          </InfoRow>
-          <InfoRow>
-            <LabelText>🇳🇿 Nationality</LabelText>
-            <SingleLineText>{team.coach.nationality}</SingleLineText>
-          </InfoRow>
-          <InfoRow>
-            <LabelText>📅 Date of Birth</LabelText>
-            <SingleLineText>{team.coach.dateOfBirth}</SingleLineText>
-          </InfoRow>
-        </Card>
+        <TeamCompetitions t={t} runningCompetitions={runningCompetitions} />
 
-        {/* Running Competitions */}
-        <SectionTitle>Competitions</SectionTitle>
-        {team.runningCompetitions.map(c => (
-          <Card key={c.id}>
-            <InfoRow>
-              <LabelText>🏆 {c.type}</LabelText>
-              <SingleLineText>{c.name}</SingleLineText>
-            </InfoRow>
-          </Card>
-        ))}
+        <TeamCoach t={t} coach={coach} />
 
-        {/* Squad */}
-        <SectionTitle>Players</SectionTitle>
-        {team.squad.map(player => (
-          <PlayerRow key={player.id}>
-            <Left>
-              <NumberCircle>
-                <NumberText>#{player.shirtNumber}</NumberText>
-              </NumberCircle>
-              <NameBlock>
-                <MainText>{player.name}</MainText>
-                <SmallText>{player.position}</SmallText>
-              </NameBlock>
-            </Left>
-            <Right>
-              <SmallText>{player.nationality}</SmallText>
-              <ValueText>
-                {player.marketValue ? `$${player.marketValue}` : '-'}
-              </ValueText>
-            </Right>
-          </PlayerRow>
-        ))}
-      </Container>
-      {/* Header */}
-    </ScrollView>
+        <TeamSquad t={t} squad={squad} />
+      </ScrollView>
+    </Container>
   );
 };
-
-// ===== Styled Components =====
 
 const Container = styled(SafeAreaView).attrs({
   edges: ['top', 'left', 'right', 'bottom'],
 })`
   flex: 1;
   background: ${color('surfaceBackground')};
+  padding: 0 20px;
 `;
 
-const Header = styled(SafeAreaView)`
-  flex-direction: row;
-  align-items: center;
-  padding: 8px 20px 16px 20px;
-  background-color: ${color('surfaceBackgroundSecondary')};
-  margin-bottom: 12px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-`;
-
-const Logo = styled.Image`
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  background-color: ${color('surfaceBackground')};
-  margin-right: 16px;
-`;
-
-const TitleBlock = styled.View`
+const LoaderWrapper = styled(SafeAreaView).attrs({
+  edges: ['top', 'left', 'right', 'bottom'],
+})`
   flex: 1;
-`;
-
-const Card = styled.View`
-  background-color: ${color('surfaceBackgroundSecondary')};
-  border-radius: 16px;
-  padding: 16px;
-  margin: 8px 16px;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.05;
-  shadow-radius: 6px;
-  elevation: 3;
-`;
-
-const InfoRow = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
+  display: flex;
   align-items: center;
-  margin-bottom: 8px;
-`;
-
-const LabelText = styled(SmallText)`
-  color: ${color('textPrimary')};
-`;
-
-const SingleLineText = styled(MainText).attrs({
-  numberOfLines: 1,
-  ellipsizeMode: 'tail',
-})``;
-
-const LinkText = styled.Text`
-  font-family: Rubik-Medium;
-  font-size: 14px;
-  color: ${color('textBrand')};
-  text-decoration: underline;
-`;
-
-const SectionTitle = styled(HeadlineText)`
-  margin: 16px 20px 8px 20px;
-`;
-
-const PlayerRow = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: ${color('surfaceBackgroundSecondary')};
-  padding: 12px 16px;
-  border-radius: 16px;
-  margin-vertical: 6px;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.05;
-  shadow-radius: 6px;
-  elevation: 2;
-`;
-
-const Left = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const NumberCircle = styled.View`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: ${color('surfaceBrand')};
   justify-content: center;
-  align-items: center;
-  margin-right: 12px;
-`;
-
-const NumberText = styled(MainText)`
-  color: #fff;
-  font-weight: 700;
-`;
-
-const NameBlock = styled.View``;
-
-const Right = styled.View`
-  align-items: flex-end;
-`;
-
-const ValueText = styled(MainText)`
-  color: ${color('textBrand')};
-  font-weight: 600;
+  background: ${color('surfaceBackground')};
 `;
