@@ -11,6 +11,7 @@ import { AppStack } from '@shared/types/global';
 import { ITeamInformation } from '@shared/types/teams';
 import { TeamCard } from '@widgets/teams/team-card';
 import { loadTeams } from '@entities/teams';
+import { HeadlineText } from '@shared/ui';
 
 const OFFSET_INCREASE_AMOUNT = 10;
 
@@ -24,7 +25,7 @@ export const TeamsHomePage: FC = () => {
     state => state.teams.teams,
   );
 
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [offset, setOffset] = useState(50);
 
   const renderItem: ListRenderItem<ITeamInformation> = useCallback(
@@ -61,8 +62,16 @@ export const TeamsHomePage: FC = () => {
   };
 
   useEffect(() => {
-    dispatch(loadTeams());
+    dispatch(loadTeams()).then(() => setLoading(false));
   }, []);
+
+  if (isLoading) {
+    return (
+      <LoaderWrapper>
+        <HeadlineText>{t('loading')}</HeadlineText>
+      </LoaderWrapper>
+    );
+  }
 
   return (
     <Container>
@@ -104,4 +113,14 @@ const Separator = styled.View`
   width: 100%;
   flex: 1;
   height: 8px;
+`;
+
+const LoaderWrapper = styled(SafeAreaView).attrs({
+  edges: ['top', 'left', 'right', 'bottom'],
+})`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${color('surfaceBackground')};
 `;
