@@ -11,4 +11,4 @@
 - **React Native**
 - **TypeScript**
 - **Styled-components**
-- **API integration** for football data
+- **API integration**
