@@ -4,14 +4,8 @@ import { loadTeam, loadTeams } from './thunks';
 
 const initialState: TeamsState = {
   teamByID: {},
-  teamsWithMeta: {
-    count: 0,
-    filters: {
-      offset: 0,
-      limit: 0,
-    },
-    teams: [],
-  },
+  teams: [],
+  matches: [],
 };
 
 export const teamsSlice = createSlice({
@@ -20,11 +14,9 @@ export const teamsSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(loadTeams.fulfilled, (state, action) => {
-      state.teamsWithMeta = {
-        ...action.payload,
-        teams: [...state.teamsWithMeta.teams, ...action.payload.teams],
-      };
+      state.teams = [...state.teams, ...action.payload];
     });
+
     builder.addCase(loadTeam.fulfilled, (state, action) => {
       state.teamByID = {
         ...state.teamByID,

@@ -18,5 +18,13 @@
   "squad_title": "Команда",
   "shirt_number": "#{{ count }}",
   "market_value": "${{ count }}",
-  "market_value_none": "-"
+  "market_value_none": "-",
+
+  "matches_title": "Матчи команды",
+  "status_LIVE": "Онлайн",
+  "status_FINISHED": "Закончен",
+  "status_POSTPONED": "Перенесли",
+  "versus": "VS",
+  "home": "Дом",
+  "away": "Вне Дома"
 }

@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { TFunction } from 'i18next';
 import { ITeamSquad } from '@shared/types/teams';
-import { MainText, SmallText } from '@shared/ui';
+import { HeadlineText, MainText, SmallText } from '@shared/ui';
 import {
   LeftWrapper,
   NumberCircle,
@@ -10,7 +10,8 @@ import {
   TextContainer,
   Container,
   ValueText,
-  TitleText,
+  TitleContainer,
+  ToggleIcon,
   PlayersWrapper,
 } from './styled';
 
@@ -20,37 +21,42 @@ interface Props {
 }
 
 export const TeamSquad: FC<Props> = ({ t, squad }) => {
+  const [isExpanded, setExpanded] = useState(false);
+
   return (
     <Container>
-      <TitleText>{t('squad_title')}</TitleText>
+      <TitleContainer onPress={() => setExpanded(prevState => !prevState)}>
+        <HeadlineText>{t('squad_title')}</HeadlineText>
+        <ToggleIcon>{isExpanded ? '▲' : '▼'}</ToggleIcon>
+      </TitleContainer>
 
-      <PlayersWrapper>
-        {squad.map(player => (
-          <PlayerContainer key={player.id}>
-            <LeftWrapper>
-              <NumberCircle>
-                <MainText>
-                  {t('shirt_number', { count: player.shirtNumber })}
-                </MainText>
-              </NumberCircle>
-              <TextContainer>
-                <MainText>{player.name}</MainText>
-                <SmallText>{player.position}</SmallText>
-              </TextContainer>
-            </LeftWrapper>
+      {isExpanded && (
+        <PlayersWrapper>
+          {squad.map((player, index) => (
+            <PlayerContainer key={player.id}>
+              <LeftWrapper>
+                <NumberCircle>
+                  <MainText>{t('shirt_number', { count: ++index })}</MainText>
+                </NumberCircle>
+                <TextContainer>
+                  <MainText>{player.name}</MainText>
+                  <SmallText>{player.position}</SmallText>
+                </TextContainer>
+              </LeftWrapper>
 
-            <RightWrapper>
-              <SmallText>{player.nationality}</SmallText>
-              <ValueText>
-                {t('market_value', {
-                  context: player.marketValue > 0 ? null : 'none',
-                  count: player.marketValue,
-                })}
-              </ValueText>
-            </RightWrapper>
-          </PlayerContainer>
-        ))}
-      </PlayersWrapper>
+              <RightWrapper>
+                <SmallText>{player.nationality}</SmallText>
+                <ValueText>
+                  {t('market_value', {
+                    context: player.marketValue > 0 ? null : 'none',
+                    count: player.marketValue,
+                  })}
+                </ValueText>
+              </RightWrapper>
+            </PlayerContainer>
+          ))}
+        </PlayersWrapper>
+      )}
     </Container>
   );
 };

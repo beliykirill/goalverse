@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import { color } from '@shared/lib/themes';
-import { ITeam } from '@shared/types/teams';
+import { ITeam, ITeamMatch } from '@shared/types/teams';
+import { teamsAPI } from '@shared/lib/api';
 import { AppDispatch, RootState } from '@shared/types/store';
 import { Nullable } from '@shared/types/global';
 import { HeadlineText } from '@shared/ui';
@@ -16,6 +21,7 @@ import { TeamSquad } from '@widgets/teams/team-squad';
 import { TeamCompetitions } from '@widgets/teams/team-competitions';
 import { TeamDetails } from '@widgets/teams/team-details';
 import { TeamHeader } from '@widgets/teams/team-header';
+import { TeamMatches } from '@widgets/teams/team-matches';
 
 export const TeamsDetailsPage = () => {
   const [t] = useTranslation();
@@ -28,13 +34,19 @@ export const TeamsDetailsPage = () => {
     state => state.teams.teamByID[params.id],
   );
 
+  const [matches, setMatches] = useState<ITeamMatch[]>([]);
+
+  useEffect(() => {
+    teamsAPI
+      .getTeamMatches(null, { id: params.id })
+      .then(loadedMatches => setMatches(loadedMatches.matches));
+  }, []);
+
   useEffect(() => {
     if (team) return;
 
     dispatch(loadTeam(params.id));
-  }, [team]);
-
-  console.log(params.id);
+  }, [params.id]);
 
   if (!team)
     return (
@@ -58,9 +70,11 @@ export const TeamsDetailsPage = () => {
 
         <TeamDetails t={t} team={team} />
 
+        <TeamCoach t={t} coach={coach} />
+
         <TeamCompetitions t={t} runningCompetitions={runningCompetitions} />
 
-        <TeamCoach t={t} coach={coach} />
+        <TeamMatches t={t} matches={matches} teamId={params.id} />
 
         <TeamSquad t={t} squad={squad} />
       </ScrollView>

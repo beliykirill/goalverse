@@ -95,17 +95,17 @@ const TextContainer = styled.View`
 `;
 
 const InformationContainer = styled.View`
-  gap: 8px;
-`;
-
-const InformationBlock = styled.View`
   background-color: ${color('surfaceBackground')};
   border-radius: 16px;
   padding: 16px;
   gap: 12px;
+`;
+
+const InformationBlock = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 `;
 
 const ValueText = styled(SmallText)`

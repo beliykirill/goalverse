@@ -4,10 +4,7 @@ import { MainText } from '@shared/ui';
 
 export const Container = styled.View`
   gap: 16px;
-  background-color: ${color('surfaceBackgroundSecondary')};
-  margin-bottom: 12px;
-  border-radius: 16px;
-  padding: 8px 20px 16px 20px;
+  margin-bottom: 16px;
 `;
 
 export const BackText = styled(MainText)`
@@ -17,6 +14,9 @@ export const BackText = styled(MainText)`
 export const LogoWrapper = styled.View`
   align-items: center;
   flex-direction: row;
+  padding: 8px 20px 16px 20px;
+  border-radius: 16px;
+  background-color: ${color('surfaceBackgroundSecondary')};
 `;
 
 export const Logo = styled.Image`

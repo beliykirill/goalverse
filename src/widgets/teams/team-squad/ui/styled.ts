@@ -1,14 +1,22 @@
 import styled from 'styled-components/native';
 import { color } from '@shared/lib/themes';
-import { HeadlineText, MainText } from '@shared/ui';
+import { MainText } from '@shared/ui';
 
 export const Container = styled.View`
   gap: 8px;
   margin-top: 16px;
 `;
 
-export const TitleText = styled(HeadlineText)`
-  margin-left: 16px;
+export const TitleContainer = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 16px;
+`;
+
+export const ToggleIcon = styled.Text`
+  font-size: 14px;
+  color: ${color('textMain')};
 `;
 
 export const Section = styled.View`

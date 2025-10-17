@@ -58,6 +58,59 @@ export interface ITeamInformation {
   website: string;
 }
 
+export interface ITeamMatchArea {
+  code: string;
+  flag: string;
+  id: number;
+  name: string;
+}
+
+export interface IMatchTeam {
+  crest: string;
+  id: number;
+  name: string;
+  shortName: string;
+  tla: string;
+}
+
+export interface ITeamMatchCompetition {
+  code: string;
+  emblem: string;
+  id: number;
+  name: string;
+  type: string;
+}
+
+export interface ITeamMatchScore {
+  duration: string;
+  fullTime: { home: 0; away: 1 };
+  halfTime: { home: 0; away: 1 };
+  winner: string;
+}
+
+export interface ITeamMatchSeason {
+  currentMatchday: number;
+  endDate: string;
+  id: number;
+  startDate: string;
+  winner: null;
+}
+
+export interface ITeamMatch {
+  id: number;
+  matchday: number;
+  stage: string;
+  venue?: string;
+  status: string;
+  utcDate: string;
+  season: ITeamMatchSeason;
+  area: ITeamMatchArea;
+  awayTeam: IMatchTeam;
+  score: ITeamMatchScore;
+  homeTeam: IMatchTeam;
+  competition: ITeamMatchCompetition;
+}
+
 export interface ITeam extends ITeamInformation {
   area: ITeamArea;
   runningCompetitions: ITeamRunningCompetition[];
@@ -81,5 +134,6 @@ export interface TeamsState {
   teamByID: {
     [teamId: string]: ITeam;
   };
-  teamsWithMeta: ITeamsWithMeta;
+  teams: ITeamInformation[];
+  matches: ITeamMatch[];
 }

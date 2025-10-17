@@ -6,15 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { AppDispatch, RootState } from '@shared/types/store';
-import {
-  ITeamFilters,
-  ITeamInformation,
-  ITeamsWithMeta,
-  TeamsState,
-} from '@shared/types/teams';
-import { TeamCard } from '@widgets/teams/team-card';
 import { color } from '@shared/lib/themes';
 import { AppStack } from '@shared/types/global';
+import { ITeamInformation } from '@shared/types/teams';
+import { TeamCard } from '@widgets/teams/team-card';
 import { loadTeams } from '@entities/teams';
 
 const OFFSET_INCREASE_AMOUNT = 10;
@@ -25,12 +20,12 @@ export const TeamsHomePage: FC = () => {
 
   const { navigate } = useNavigation<AppStack>();
 
-  const teamsWithMeta = useSelector<RootState, ITeamsWithMeta>(
-    state => state.teams.teamsWithMeta,
+  const teams = useSelector<RootState, ITeamInformation[]>(
+    state => state.teams.teams,
   );
 
   const [isLoading, setLoading] = useState(false);
-  const [offset, setOffset] = useState(teamsWithMeta.count);
+  const [offset, setOffset] = useState(50);
 
   const renderItem: ListRenderItem<ITeamInformation> = useCallback(
     ({ item }) => (
@@ -55,6 +50,16 @@ export const TeamsHomePage: FC = () => {
     setOffset(prevState => prevState + nextOffset);
   };
 
+  const onRefresh = async () => {
+    try {
+      setLoading(true);
+
+      await dispatch(loadTeams());
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     dispatch(loadTeams());
   }, []);
@@ -62,12 +67,10 @@ export const TeamsHomePage: FC = () => {
   return (
     <Container>
       <StyledFlashList
-        data={teamsWithMeta.teams}
+        data={teams}
         renderItem={renderItem}
-        refreshing={false}
-        onRefresh={() => {
-          dispatch(loadTeams());
-        }}
+        refreshing={isLoading}
+        onRefresh={onRefresh}
         keyExtractor={item => item.id.toString()}
         estimatedItemSize={200}
         contentContainerStyle={{

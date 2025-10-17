@@ -6,7 +6,7 @@ export const Container = styled.View`
   background-color: ${color('surfaceBackgroundSecondary')};
   border-radius: 16px;
   padding: 16px;
-  gap: 8px;
+  gap: 16px;
 `;
 
 export const TextContainer = styled.View`

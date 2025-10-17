@@ -1,0 +1,1 @@
+export { TeamMatches } from './ui';
