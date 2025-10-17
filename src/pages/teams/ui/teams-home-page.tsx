@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { AppDispatch, RootState } from '@shared/types/store';
+import { AppDispatch, IAsyncThunkError, RootState } from '@shared/types/store';
 import { color } from '@shared/lib/themes';
 import { AppStack } from '@shared/types/global';
 import { ITeamInformation } from '@shared/types/teams';
@@ -21,7 +21,7 @@ export const TeamsHomePage: FC = () => {
 
   const { navigate } = useNavigation<AppStack>();
 
-  const teams = useSelector<RootState, ITeamInformation[]>(
+  const teams = useSelector<RootState, ITeamInformation[] | IAsyncThunkError>(
     state => state.teams.teams,
   );
 
@@ -69,6 +69,14 @@ export const TeamsHomePage: FC = () => {
     return (
       <LoaderWrapper>
         <HeadlineText>{t('loading')}</HeadlineText>
+      </LoaderWrapper>
+    );
+  }
+
+  if ('message' in teams) {
+    return (
+      <LoaderWrapper>
+        <HeadlineText>{t(teams.message)}</HeadlineText>
       </LoaderWrapper>
     );
   }

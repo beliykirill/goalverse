@@ -1,4 +1,4 @@
-import { AsyncThunkStatus } from '@shared/types/store';
+import { AsyncThunkStatus, IAsyncThunkError } from '@shared/types/store';
 
 export interface ITeamArea {
   id: number;
@@ -134,6 +134,5 @@ export interface TeamsState {
   teamByID: {
     [teamId: string]: ITeam;
   };
-  teams: ITeamInformation[];
-  matches: ITeamMatch[];
+  teams: ITeamInformation[] | IAsyncThunkError;
 }

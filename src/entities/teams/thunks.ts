@@ -4,14 +4,26 @@ import { teamsAPI } from '@shared/lib/api';
 
 export const loadTeams = createAsyncThunk<
   ITeamInformation[],
-  { offset?: number }
->(
-  'teams',
-  async (params = {}) =>
-    await teamsAPI.getTeams(params).then(data => data.teams),
-);
+  { offset?: number },
+  { rejectValue: string }
+>('teams', async (params = {}, { rejectWithValue }) => {
+  try {
+    const teamsWithMeta = await teamsAPI.getTeams(params);
 
-export const loadTeam = createAsyncThunk<ITeam, number>(
-  'teams/details',
-  async id => await teamsAPI.getTeam(null, { id }),
-);
+    return teamsWithMeta.teams;
+  } catch (error) {
+    return rejectWithValue('teams_load_failed');
+  }
+});
+
+export const loadTeam = createAsyncThunk<
+  ITeam,
+  number,
+  { rejectValue: string }
+>('teams/details', async (id, { rejectWithValue }) => {
+  try {
+    return await teamsAPI.getTeam(null, { id });
+  } catch (error) {
+    return rejectWithValue('team_not_found');
+  }
+});

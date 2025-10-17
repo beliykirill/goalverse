@@ -1,18 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import { color } from '@shared/lib/themes';
 import { ITeam, ITeamMatch } from '@shared/types/teams';
 import { teamsAPI } from '@shared/lib/api';
-import { AppDispatch, RootState } from '@shared/types/store';
+import { AppDispatch, IAsyncThunkError, RootState } from '@shared/types/store';
 import { Nullable } from '@shared/types/global';
 import { HeadlineText } from '@shared/ui';
 import { loadTeam } from '@entities/teams';
@@ -30,7 +26,7 @@ export const TeamsDetailsPage = () => {
   const { goBack } = useNavigation();
   const { params } = useRoute();
 
-  const team = useSelector<RootState, Nullable<ITeam>>(
+  const team = useSelector<RootState, Nullable<ITeam> | IAsyncThunkError>(
     state => state.teams.teamByID[params.id],
   );
 
@@ -54,6 +50,14 @@ export const TeamsDetailsPage = () => {
         <HeadlineText>{t('loading')}</HeadlineText>
       </LoaderWrapper>
     );
+
+  if ('message' in team) {
+    return (
+      <LoaderWrapper>
+        <HeadlineText>{t(team.message)}</HeadlineText>
+      </LoaderWrapper>
+    );
+  }
 
   const { name, shortName, crest, coach, squad, runningCompetitions } = team;
 
@@ -90,12 +94,8 @@ const Container = styled(SafeAreaView).attrs({
   padding: 0 20px;
 `;
 
-const LoaderWrapper = styled(SafeAreaView).attrs({
-  edges: ['top', 'left', 'right', 'bottom'],
-})`
-  flex: 1;
+const LoaderWrapper = styled(Container)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${color('surfaceBackground')};
 `;

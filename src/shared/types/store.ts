@@ -5,6 +5,12 @@ export type AppStore = ReturnType<typeof store>;
 export type AppDispatch = AppStore['dispatch'];
 export type AsyncThunkStatus = 'pending' | 'fulfilled' | 'rejected';
 
+export interface IAsyncThunkError {
+  name: string;
+  message: string;
+  stack?: string;
+}
+
 export interface RootState {
   teams: TeamsState;
 }

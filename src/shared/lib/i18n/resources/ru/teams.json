@@ -26,5 +26,8 @@
   "status_POSTPONED": "Перенесли",
   "versus": "VS",
   "home": "Дом",
-  "away": "Вне Дома"
+  "away": "Вне Дома",
+
+  "teams_load_failed": "Команды не доступны",
+  "team_not_found": "Команда не найдена"
 }
