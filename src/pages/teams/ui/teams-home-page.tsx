@@ -6,7 +6,12 @@ import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { AppDispatch, RootState } from '@shared/types/store';
-import { ITeamFilters, TeamsState } from '@shared/types/teams';
+import {
+  ITeamFilters,
+  ITeamInformation,
+  ITeamsWithMeta,
+  TeamsState,
+} from '@shared/types/teams';
 import { TeamCard } from '@widgets/teams/team-card';
 import { color } from '@shared/lib/themes';
 import { AppStack } from '@shared/types/global';
@@ -20,15 +25,14 @@ export const TeamsHomePage: FC = () => {
 
   const { navigate } = useNavigation<AppStack>();
 
-  const { data, status } = useSelector<RootState, TeamsState>(
-    state => state.teams,
+  const teamsWithMeta = useSelector<RootState, ITeamsWithMeta>(
+    state => state.teams.teamsWithMeta,
   );
 
-  const [offset, setOffset] = useState(data.count);
+  const [isLoading, setLoading] = useState(false);
+  const [offset, setOffset] = useState(teamsWithMeta.count);
 
-  const isLoading = status === 'pending';
-
-  const renderItem: ListRenderItem<ITeam> = useCallback(
+  const renderItem: ListRenderItem<ITeamInformation> = useCallback(
     ({ item }) => (
       <TeamCard
         t={t}
@@ -48,9 +52,7 @@ export const TeamsHomePage: FC = () => {
       }),
     );
 
-    setOffset(prevState =>
-      Math.min(prevState + OFFSET_INCREASE_AMOUNT, data.count),
-    );
+    setOffset(prevState => prevState + nextOffset);
   };
 
   useEffect(() => {
@@ -60,10 +62,12 @@ export const TeamsHomePage: FC = () => {
   return (
     <Container>
       <StyledFlashList
-        data={data.teams}
+        data={teamsWithMeta.teams}
         renderItem={renderItem}
-        refreshing={isLoading}
-        onRefresh={() => dispatch(loadTeams())}
+        refreshing={false}
+        onRefresh={() => {
+          dispatch(loadTeams());
+        }}
         keyExtractor={item => item.id.toString()}
         estimatedItemSize={200}
         contentContainerStyle={{

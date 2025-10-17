@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TeamsState } from '@shared/types/teams';
-import { loadTeams } from './thunks';
+import { loadTeam, loadTeams } from './thunks';
 
 const initialState: TeamsState = {
-  data: {
+  teamByID: {},
+  teamsWithMeta: {
     count: 0,
     filters: {
       offset: 0,
-      limit: 5,
+      limit: 0,
     },
     teams: [],
   },
-  status: 'pending',
 };
 
 export const teamsSlice = createSlice({
@@ -20,17 +20,16 @@ export const teamsSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(loadTeams.fulfilled, (state, action) => {
-      state.data = {
+      state.teamsWithMeta = {
         ...action.payload,
-        teams: [...state.data.teams, ...action.payload.teams],
+        teams: [...state.teamsWithMeta.teams, ...action.payload.teams],
       };
-      state.status = action.meta.requestStatus;
     });
-    builder.addCase(loadTeams.rejected, (state, action) => {
-      state.status = action.meta.requestStatus;
-    });
-    builder.addCase(loadTeams.pending, (state, action) => {
-      state.status = action.meta.requestStatus;
+    builder.addCase(loadTeam.fulfilled, (state, action) => {
+      state.teamByID = {
+        ...state.teamByID,
+        [action.meta.arg]: action.payload,
+      };
     });
   },
 });

@@ -15,9 +15,23 @@ export interface ITeamRunningCompetition {
   emblem: string;
 }
 
-export interface ITeamCoachContract {
+export interface ITeamContract {
   start: string;
   until: string;
+}
+
+export interface ITeamSquad {
+  id: number;
+  firstName: string;
+  lastName: string;
+  name: string;
+  position: string;
+  dateOfBirth: string;
+  nationality: string;
+  shirtNumber: number;
+  marketValue: number;
+  contract: ITeamContract;
+  lastUpdated: string;
 }
 
 export interface ITeamCoach {
@@ -27,7 +41,7 @@ export interface ITeamCoach {
   name: string;
   dateOfBirth: string;
   nationality: string;
-  contract: ITeamCoachContract;
+  contract: ITeamContract;
 }
 
 export interface ITeamInformation {
@@ -48,6 +62,8 @@ export interface ITeam extends ITeamInformation {
   area: ITeamArea;
   runningCompetitions: ITeamRunningCompetition[];
   coach: ITeamCoach;
+  marketValue: number;
+  squad: ITeamSquad[];
 }
 
 export interface ITeamFilters {
@@ -62,6 +78,8 @@ export interface ITeamsWithMeta {
 }
 
 export interface TeamsState {
-  data: ITeamsWithMeta;
-  status: AsyncThunkStatus;
+  teamByID: {
+    [teamId: string]: ITeam;
+  };
+  teamsWithMeta: ITeamsWithMeta;
 }
