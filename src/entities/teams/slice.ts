@@ -3,7 +3,14 @@ import { TeamsState } from '@shared/types/teams';
 import { loadTeams } from './thunks';
 
 const initialState: TeamsState = {
-  data: [],
+  data: {
+    count: 0,
+    filters: {
+      offset: 0,
+      limit: 5,
+    },
+    teams: [],
+  },
   status: 'pending',
 };
 
@@ -13,7 +20,10 @@ export const teamsSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(loadTeams.fulfilled, (state, action) => {
-      state.data = action.payload.data;
+      state.data = {
+        ...action.payload,
+        teams: [...state.data.teams, ...action.payload.teams],
+      };
       state.status = action.meta.requestStatus;
     });
     builder.addCase(loadTeams.rejected, (state, action) => {

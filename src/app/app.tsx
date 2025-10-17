@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { appRoutes } from '@app/routes';
-import { teamsAPI } from '@shared/lib/api';
 
 const Stack = createNativeStackNavigator();
 

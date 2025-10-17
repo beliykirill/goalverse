@@ -1,4 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { TeamsState } from '@shared/types/teams';
+import { ITeamsWithMeta } from '@shared/types/teams';
+import { teamsAPI } from '@shared/lib/api';
 
-export const loadTeams = createAsyncThunk<TeamsState>('teams', async () => {});
+export const loadTeams = createAsyncThunk<ITeamsWithMeta, { offset?: number }>(
+  'teams',
+  async (params = {}) => await teamsAPI.getTeams(params),
+);
