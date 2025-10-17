@@ -1,13 +1,13 @@
 # ⚽ Goalverse
 
-**Your football universe**
+**Ваша футбольная вселенная**
 
-Explore teams, discover players, and dive into the world of football in one place.  
-Quick access to club info, stats, and history - everything a true fan needs
+Изучайте команды, открывайте новых игроков и окунитесь в мир футбола в одном месте.
+Быстрый доступ к информации о клубе, статистике и истории - всё, что нужно настоящему болельщику
 
 ---
 
-### 🛠️ Tech Stack
+### 🛠️ Технический стек
 - **React Native**
 - **TypeScript**
 - **Styled-components**
