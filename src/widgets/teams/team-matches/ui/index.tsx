@@ -54,6 +54,7 @@ export const TeamMatches: FC<Props> = ({ t, matches, teamId }) => {
             status,
             score,
           } = match;
+          console.log(status);
 
           const isHome = homeTeam.id === teamId;
           const isFinished = status === 'FINISHED';
