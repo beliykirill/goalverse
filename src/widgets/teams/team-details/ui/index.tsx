@@ -29,7 +29,7 @@ export const TeamDetails: FC<Props> = ({ t, team }) => {
       <TextContainer>
         <SecondaryText>{t('club_colors')}</SecondaryText>
         <MainText numberOfLines={1} ellipsizeMode="tail">
-          {parseStringToEmoji(clubColorsx)}
+          {parseStringToEmoji(clubColors)}
         </MainText>
       </TextContainer>
       <TextContainer>
