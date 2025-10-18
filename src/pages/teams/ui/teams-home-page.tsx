@@ -26,6 +26,7 @@ export const TeamsHomePage: FC = () => {
   );
 
   const [isLoading, setLoading] = useState(true);
+  const [isRefreshing, setRefreshing] = useState(false);
   const [offset, setOffset] = useState(50);
 
   const renderItem: ListRenderItem<ITeamInformation> = useCallback(
@@ -53,11 +54,11 @@ export const TeamsHomePage: FC = () => {
 
   const onRefresh = async () => {
     try {
-      setLoading(true);
+      setRefreshing(true);
 
       await dispatch(loadTeams());
     } finally {
-      setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -86,7 +87,7 @@ export const TeamsHomePage: FC = () => {
       <StyledFlashList
         data={teams}
         renderItem={renderItem}
-        refreshing={isLoading}
+        refreshing={isRefreshing}
         onRefresh={onRefresh}
         keyExtractor={item => item.id.toString()}
         estimatedItemSize={200}
