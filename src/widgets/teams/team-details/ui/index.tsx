@@ -4,6 +4,7 @@ import { ITeam } from '@shared/types/teams';
 import { MainText, SecondaryText } from '@shared/ui';
 import { Linking } from 'react-native';
 import { Container, LinkText, TextContainer } from './styled';
+import { parseStringToEmoji } from '@shared/lib/helpers';
 
 interface Props {
   t: TFunction;
@@ -28,7 +29,7 @@ export const TeamDetails: FC<Props> = ({ t, team }) => {
       <TextContainer>
         <SecondaryText>{t('club_colors')}</SecondaryText>
         <MainText numberOfLines={1} ellipsizeMode="tail">
-          {clubColors}
+          {parseStringToEmoji(clubColorsx)}
         </MainText>
       </TextContainer>
       <TextContainer>

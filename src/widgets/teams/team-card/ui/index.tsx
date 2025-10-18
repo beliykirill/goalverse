@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import { color } from '@shared/lib/themes';
 import { ITeamInformation } from '@shared/types/teams';
 import { HeadlineText, SecondaryText, SmallText } from '@shared/ui';
+import { parseStringToEmoji } from '@shared/lib/helpers';
 
 interface TeamCardProps {
   t: TFunction;
@@ -48,7 +49,7 @@ export const TeamCard = ({ t, team, onPress }: TeamCardProps) => {
         </InformationBlock>
         <InformationBlock>
           <SecondaryText>{t('club_colors')}</SecondaryText>
-          <ValueText>{clubColors}</ValueText>
+          <ValueText>{parseStringToEmoji(clubColors)}</ValueText>
         </InformationBlock>
         <InformationBlock>
           <SecondaryText>{t('founded')}</SecondaryText>
@@ -110,6 +111,7 @@ const InformationBlock = styled.View`
 
 const ValueText = styled(SmallText)`
   text-align: right;
+  flex: 1;
 `;
 
 const LinkText = styled.Text`
